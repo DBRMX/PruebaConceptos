@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Alert</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 400px; }
+        textarea { width: 100%; height: 80px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        #status { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Prueba - Telegram Bots</h2>
+        <p>Mensajes de prueba:</p>
+        <textarea id="msg" placeholder="Mande un mensaje de prueba..."></textarea>
+        <button onclick="enviarAlerta()">Enviar a Telegram</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function enviarAlerta() {
+            const token = "8085350221:AAGHGSsLx32oHOtq2TXB8ZvQrxkYgugQZHc";
+            const chatId = "5050753152";
+            const mensaje = document.getElementById("msg").value;
+            const statusDiv = document.getElementById("status");
+
+            if (!mensaje) {
+                statusDiv.innerText = "Error: El mensaje no puede estar vacío.";
+                statusDiv.style.color = "red";
+                return;
+            }
+
+            statusDiv.innerText = "Procesando envío...";
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: `⚠️ AVISO DE RESPUESTA:\n${mensaje}`
+                    })
+                });
+
+                const data = await response.json();
+                if (data.ok) {
+                    statusDiv.innerText = "✅ Alerta enviada con éxito.";
+                    statusDiv.style.color = "green";
+                    document.getElementById("msg").value = "";
+                } else {
+                    statusDiv.innerText = "❌ Error: " + data.description;
+                }
+            } catch (error) {
+                statusDiv.innerText = "❌ Error de conexión.";
+            }
+        }
+    </script>
+</body>
+</html>

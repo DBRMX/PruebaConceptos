@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp API</title>
+    <style>
+        body { font-family: Segoe UI, sans-serif; padding: 20px; background-color: #e5ddd5; }
+        .container { background: white; padding: 25px; border-radius: 10px; max-width: 450px; margin: auto; }
+        .btn-wa { background-color: #25d366; color: white; border: none; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Prueba - WhatsApp API</h2>
+        <p>Cloud API de Meta.</p>
+        <button class="btn-wa" onclick="enviarWhatsApp()">Enviar Plantilla de Bienvenida</button>
+    </div>
+
+    <script>
+        async function enviarWhatsApp() {
+            const phoneId = "1039467359250214";
+            const token = "EAAmTvm0dyOgBQzm28DkHlhFf69lVMZA0lmkb5NxSgs3BZAcnEaZBLZBtwIjETazsgqNJk92tZBUQAqpH2Xx62A8SCjyhKdNLkelmbmZCvAugOjW3YnYVFJcYXrsmdhSOQTaNsfj86ZBpnNpCRE8nZAsBpI8e62Ft3MzGyUSl9CydjDtx0cO55d6ZCuc3JWOlKlAar7V6LPaM1hxGZAuK9zQZBlbGy6WsEMyICfJZACZBAJyO4vcvwM3tzRRF61uzOWHmwwMGqmsccX2kGnBNIMlGPN58fXwBm3zlbwX9AKwZDZD";
+            const destination = "524444963166";
+
+            const url = `https://graph.facebook.com/v17.0/${phoneId}/messages`;
+
+            const payload = {
+                messaging_product: "whatsapp",
+                to: destination,
+                type: "template",
+                template: {
+                    name: "hello_world",
+                    language: { code: "en_us" }
+                }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert("¡Éxito! Requerimiento funcional de notificación validado.");
+                } else {
+                    const error = await response.json();
+                    console.error("Error de Meta:", error);
+                }
+            } catch (e) {
+                alert("Error técnico de red.");
+            }
+        }
+    </script>
+</body>
+</html>
